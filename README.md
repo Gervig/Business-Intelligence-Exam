@@ -2,7 +2,7 @@
 ### Business Intelligence Exam for EK 4th Semester (Dat1F24)
 
 ## Context
-More and more games are being developed and not all of them are successful. Companies have access to a lot of data, which includes, to name a few: Where games are being sold, release date, genres and how many were sold. The dataset that this project will be working with contains data stretching back from 1971 (CHECK THIS DATE!!!) to 2024.
+More and more games are being developed and not all of them are successful. Companies have access to a lot of data, which includes, to name a few: Where games are being sold, release date, genres and how many were sold. The dataset that this project will be working with contains data stretching back from 1971 (CHECK THIS DATE!!!) to 2024. NÆVN AT DER ER MEGET MANGLEFULD DATA OG ANDRE TING VED DET
 
 ## Purpose
 The purpose of this project is to help companies that either develop, market and or publish games to increase their sales by looking at previously released games.
@@ -10,10 +10,10 @@ The purpose of this project is to help companies that either develop, market and
 ## Research Questions
 In this project we will investigate the following questions:
 
-1) When should a company release a game to maximize sales at launch?
-2) Which consoles should a game be developed for?
-3) How can trends be predicted so that a game is released when its genre is popular?
-4) Which game genres sell better in which regions, so that companies know where to market their games?
+1) When should a company release a game to maximize sales at launch? which genre? ML multiple linær reg month
+2) Which consoles should a game be developed for? ML ex - classficastion
+3) How can trends be predicted so that a game is released when its genre is popular? how long intervals before genre is "hot"
+4) Which game genres sell better in which regions, so that companies know where to market their games? which games for which regions
 
 ## Hypothesis
 Our hypothesis for the above mentioned questions:
