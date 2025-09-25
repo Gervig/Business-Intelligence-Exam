@@ -11,7 +11,7 @@ The purpose of this project is to help companies that either develop, market and
 In this project we will investigate the following questions:
 
 1) When should a company release a game to maximize sales at launch?
-- secoundar: which genre? ML: Linear / multiple linear regession. dependent variable: sales, independent variable: month or periode
+- secoundar: which genre? and console ML: Linear / multiple linear / poly regession. dependent variable: sales, independent variable: month or period (new column ranking)
 
 2) Which consoles should a spefict genre game be developed for?
 - ML: classficastion dependent variable: sales, independent variable: genre, console
