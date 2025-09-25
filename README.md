@@ -13,6 +13,8 @@ In this project we will investigate the following questions:
 1) When should a company release a game to maximize sales at launch?
 - secoundar: which genre? and console ML: Linear / multiple linear / poly regession. dependent variable: sales, independent variable: month or period (new column ranking)
 
+One-hot encode months and check for correlation of sales for each month. Heatmap.
+
 2) Which consoles should a specific genre game be developed for?
 - ML: classficastion dependent variable: sales, independent variable: genre, console
 
@@ -21,6 +23,9 @@ In this project we will investigate the following questions:
 4) Which game genres sell better in which regions, so that companies know where to market their games? which games for which regions
 - ML: classficastion dependent variable: sales, independent variable: genre, region_sales
 
+5) Can we predict the sales of a game based on the different categorical values in the dataset before it launches.
+- (Random Forrest)
+
 ## Hypothesis
 Our hypothesis for the above mentioned questions:
 
@@ -28,6 +33,8 @@ Our hypothesis for the above mentioned questions:
 2) We assume that certain game genres sell better on specific consoles. Therefore, we expect to see a significantly larger number of sales from a specific genre on those consoles.
 3) We assume that some game genres follow a popularity cycle, and we expect to identify patterns in when specific genres become popular.
 4) We assume that some game genres sell better in specific regions.
+5) We assume that the combination of categorical features in the dataset (such as genre, console, publisher, and developer) contains enough information to predict a game’s total sales before launch. Therefore, we expect that a machine learning model, such as a Random Forest, will be able to generate reasonably accurate predictions of sales based solely on these features.
+
 
 ## Annotation
 - This project addresses when it is most optimal to release a game in a specific genre and region.
