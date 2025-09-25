@@ -13,7 +13,7 @@ In this project we will investigate the following questions:
 1) When should a company release a game to maximize sales at launch?
 - secoundar: which genre? and console ML: Linear / multiple linear / poly regession. dependent variable: sales, independent variable: month or period (new column ranking)
 
-2) Which consoles should a spefict genre game be developed for?
+2) Which consoles should a specific genre game be developed for?
 - ML: classficastion dependent variable: sales, independent variable: genre, console
 
 3) How can trends be predicted so that a game is released when its genre is popular? how long intervals before genre is "hot"
@@ -34,3 +34,27 @@ Our hypothesis for the above mentioned questions:
 - The success of a game is highly influenced by releasing it to the right target audience at the right time.
 - Our project will be able to predict trends in the gaming market using a machine learning model.
 - It will help companies avoid developing games that flop by essentially connecting the right game with the right user at the right time.
+
+## Data units explained
+img = the uri for the box art at vgchartz.com
+title = the title
+console = the console
+genre = the genre
+publisher = the publisher
+developer = the developer
+vg_score = the vgchartz critical score (out of 10)
+critic_score = the metacritic score (out of 10)
+user_score = the users score (out of 10)
+total_shipped = the total number shipped in millions
+total_sales = the global sales in millions
+na_sales = the North American sales in millions
+jp_sales = the Japanese sales in millions
+pal_sales = the PAL sales in millions
+other_sales = Other sales in millions
+release_date = the release date
+last_update = the last date that the data in the row was updated
+
+
+## References
+Dataset: https://mavenanalytics.io/data-playground/video-game-sales
+Kaggle study: https://www.kaggle.com/datasets/asaniczka/video-game-sales-2024
