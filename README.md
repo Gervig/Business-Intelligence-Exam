@@ -13,7 +13,6 @@ In this project we will investigate the following questions:
 1) When should a company release a game to maximize sales at launch?
 
 2) Do video games form distinct clusters based on release period (old vs. new) and sales performance (high vs. low)?
-- (clustering, hvornår og hvormeget)
 
 3) Which consoles should a specific genre game be developed for?
 - ML: classficastion dependent variable: sales, independent variable: genre, console
@@ -50,23 +49,20 @@ Our hypothesis for the above mentioned questions:
 - It will help companies avoid developing games that flop by essentially connecting the right game with the right user at the right time.
 
 ## Data units explained
-img = the uri for the box art at vgchartz.com
-title = the title
-console = the console
-genre = the genre
-publisher = the publisher
-developer = the developer
-vg_score = the vgchartz critical score (out of 10)
-critic_score = the metacritic score (out of 10)
-user_score = the users score (out of 10)
-total_shipped = the total number shipped in millions
-total_sales = the global sales in millions
-na_sales = the North American sales in millions
-jp_sales = the Japanese sales in millions
-pal_sales = the PAL sales in millions
-other_sales = Other sales in millions
-release_date = the release date
-last_update = the last date that the data in the row was updated
+- img = the uri for the box art at vgchartz.com
+- title = the title
+- console = the console
+- genre = the genre
+- publisher = the publisher
+- developer = the developer
+- critic_score = the metacritic score (out of 10)
+- total_sales = the global sales in millions
+- na_sales = the North American sales in millions
+- jp_sales = the Japanese sales in millions
+- pal_sales = the PAL sales in millions
+- other_sales = Other sales in millions
+- release_date = the release date
+-last_update = the last date that the data in the row was updated
 
 
 ## References
