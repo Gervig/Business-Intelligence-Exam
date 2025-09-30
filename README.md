@@ -22,7 +22,6 @@ In this project we will investigate the following questions:
 5) Which game genres sell better in which regions, so that companies know where to market their games? which games for which regions
 
 6) Can we predict the sales of a game based on the different categorical values in the dataset before it launches.
-- (Random Forrest)
 
 
 
