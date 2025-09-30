@@ -1,0 +1,3 @@
+Vi kan ikke lave regssion fordi at de fleste af vores værdier er kategoriske
+
+Vi kan næsten kun bruge classification fordi næsten alle vores værdier er kategoriske

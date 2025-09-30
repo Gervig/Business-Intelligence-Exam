@@ -11,29 +11,36 @@ The purpose of this project is to help companies that either develop, market and
 In this project we will investigate the following questions:
 
 1) When should a company release a game to maximize sales at launch?
-- secoundar: which genre? and console ML: Linear / multiple linear / poly regession. dependent variable: sales, independent variable: month or period (new column ranking)
 
-One-hot encode months and check for correlation of sales for each month. Heatmap.
+2) Do video games form distinct clusters based on release period (old vs. new) and sales performance (high vs. low)?
+- (clustering, hvornår og hvormeget)
 
-2) Which consoles should a specific genre game be developed for?
+3) Which consoles should a specific genre game be developed for?
 - ML: classficastion dependent variable: sales, independent variable: genre, console
 
-3) How can trends be predicted so that a game is released when its genre is popular? how long intervals before genre is "hot"
+4) How can trends be predicted so that a game is released when its genre is popular?
 
-4) Which game genres sell better in which regions, so that companies know where to market their games? which games for which regions
-- ML: classficastion dependent variable: sales, independent variable: genre, region_sales
+5) Which game genres sell better in which regions, so that companies know where to market their games? which games for which regions
 
-5) Can we predict the sales of a game based on the different categorical values in the dataset before it launches.
+6) Can we predict the sales of a game based on the different categorical values in the dataset before it launches.
 - (Random Forrest)
+
+
 
 ## Hypothesis
 Our hypothesis for the above mentioned questions:
 
 1) We assume that games sell better during certain periods of the year compared to others. Therefore, we expect to observe a trend where games released in those periods achieve higher sales.
-2) We assume that certain game genres sell better on specific consoles. Therefore, we expect to see a significantly larger number of sales from a specific genre on those consoles.
-3) We assume that some game genres follow a popularity cycle, and we expect to identify patterns in when specific genres become popular.
-4) We assume that some game genres sell better in specific regions.
-5) We assume that the combination of categorical features in the dataset (such as genre, console, publisher, and developer) contains enough information to predict a game’s total sales before launch. Therefore, we expect that a machine learning model, such as a Random Forest, will be able to generate reasonably accurate predictions of sales based solely on these features.
+
+2) We expect video games can be clustered into meaningful groups according to their age and sales success
+
+3) We assume that certain game genres sell better on specific consoles. Therefore, we expect to see a significantly larger number of sales from a specific genre on those consoles.
+
+4) We assume that some game genres follow a popularity cycle, and we expect to identify patterns in when specific genres become popular.
+
+5) We assume that some game genres sell better in specific regions.
+
+6) We assume that the combination of categorical features in the dataset (such as genre, console, publisher, and developer) contains enough information to predict a game’s total sales before launch. Therefore, we expect that a machine learning model, such as a Random Forest, will be able to generate reasonably accurate predictions of sales based solely on these features.
 
 
 ## Annotation
