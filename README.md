@@ -14,8 +14,7 @@ In this project we will investigate the following questions:
 
 2) Do video games form distinct clusters based on release period (old vs. new) and sales performance (high vs. low)?
 
-3) Which consoles should a specific genre game be developed for?
-- ML: classficastion dependent variable: sales, independent variable: genre, console
+3) Which consoles should a specific genre game be developed for optimzed sales?
 
 4) How can trends be predicted so that a game is released when its genre is popular?
 
@@ -30,7 +29,7 @@ Our hypothesis for the above mentioned questions:
 
 1) We assume that games sell better during certain periods of the year compared to others. Therefore, we expect to observe a trend where games released in those periods achieve higher sales.
 
-2) We expect video games can be clustered into meaningful groups according to their age and sales success
+2) We expect video games can be clustered into meaningful groups according to their age and sales success.
 
 3) We assume that certain game genres sell better on specific consoles. Therefore, we expect to see a significantly larger number of sales from a specific genre on those consoles.
 

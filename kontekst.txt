@@ -1,3 +1,0 @@
-kontekst:
-
-Der bliver udgivet flere og flere spil og det er ikke alle der sælger godt. Virksomhed har adgang til en stor mængde som inkludere; hvor i verden det blevet solgt, hvornår det bled udgivet, hvilke slags genre og hvor mange der blev solgt. Datasættet strækker sig helt tilbage til 1971 (check dato!!!) og frem til 2024.

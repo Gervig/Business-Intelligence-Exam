@@ -1,5 +1,0 @@
-hypotese:
-1) Vi går ud fra at spil sælger bedre i nogle perioder på året i forhold til andre. Så vi vil kunne se en tendens for spil som sælger bedre når de er blevet udgivet i de perioder.
-2) Vi går ud fra at der er genre af spil som sælger bedre på bestemte konsoller. Så vi vil kunne se at der er en signifikant større mængde af spil af den genre til en given konsol.
-3) Vi går ud fra at nogle genre af spil har en popularitets cyklus, så vi går ud fra at vi vil kunne finde et mønster i hvornår specifikke genre af spil vil være populære.
-4) Vi går ud fra at nogle genre af spil sælger bedre i givne regioner.
