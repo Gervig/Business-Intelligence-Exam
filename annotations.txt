@@ -1,5 +1,0 @@
-annotations:
-- Der her projekt adressere hvornår man bedst skal udgive et spil i en bestemt genre og region.
-- Det har stor indflydelse af spillets success at det bliver udgivet til den rigtige målgruppe på det rigtige tidspunkt.
-- Vores projekt vil kunne forudse tendenser i spilmarkedet ved hjælp af en machine learning model.
-- Vil hjælpe virksomheder med at undgå at udvikle spil som flopper, essentielt forbinde det rigtige spil med den rigtige bruger på det rigtige tidspunkt.
