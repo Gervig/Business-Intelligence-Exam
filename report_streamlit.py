@@ -53,13 +53,12 @@ if data is not None:
             data_clean["year"] = data_clean["release_date"].dt.year.astype("Int64")
 
         # -----------------------------
-        # Question 1: Best month to release a game
+        # Question 1
         # -----------------------------
         st.subheader("🎮 Q1: Best Month to Release a Game")
 
         if all(x in data_clean.columns for x in ["month", "year", "total_sales"]):
             df_q1 = data_clean.copy()
-
             max_sales = df_q1.groupby(['year', 'month'])['total_sales'].sum().max()
             fig = px.histogram(
                 df_q1,
@@ -75,10 +74,9 @@ if data is not None:
             st.plotly_chart(fig)
 
         # -----------------------------
-        # Question 2: Clustering based on release period & sales
+        # Question 2
         # -----------------------------
         st.subheader("📊 Q2: Clustering Games by Release Period & Sales")
-
         if all(x in data_clean.columns for x in ["year", "month", "total_sales"]):
             df_q2 = data_clean.copy()
             df_q2 = df_q2.dropna(subset=["year", "month"])
@@ -88,7 +86,6 @@ if data is not None:
             scaler = StandardScaler()
             X_scaled = scaler.fit_transform(X_clustering)
 
-            st.write("Scatter plot of sales over time:")
             fig, ax = plt.subplots(figsize=(10,5))
             ax.scatter(df_q2['date'], df_q2['total_sales'], s=50, alpha=0.7)
             ax.set_xlabel("Release Date (Year-Month)")
@@ -97,14 +94,11 @@ if data is not None:
             plt.xticks(rotation=45)
             st.pyplot(fig)
 
-            # Determine number of clusters
             optimal_k = st.slider("Select number of clusters (K)", 2, 6, 4)
             kmeans = KMeans(n_clusters=optimal_k, n_init=10, random_state=42)
             df_q2['cluster'] = kmeans.fit_predict(X_scaled)
 
             st.write(f"K-Means clusters assigned ({optimal_k} clusters).")
-
-            st.write("Cluster Visualization:")
             fig = px.scatter(
                 df_q2,
                 x='date_numeric',
@@ -115,15 +109,8 @@ if data is not None:
             )
             st.plotly_chart(fig)
 
-            # SilhouetteVisualizer
-            # st.write("Silhouette Visualizer:")
-            # fig, ax = plt.subplots()
-            # visualizer = SilhouetteVisualizer(KMeans(n_clusters=optimal_k), ax=ax)
-            # visualizer.fit(X_scaled)
-            # st.pyplot(fig)
-
         # -----------------------------
-        # Question 3: Best console per genre
+        # Question 3
         # -----------------------------
         st.subheader("🎮 Q3: Best Console per Genre")
         if all(x in data_clean.columns for x in ["genre", "console", "total_sales"]):
@@ -144,48 +131,63 @@ if data is not None:
             fig.update_xaxes(categoryorder="array", categoryarray=list(all_consoles))
             st.plotly_chart(fig)
 
-            # Show top console per genre
             best_console = sales_summary.sort_values(['genre','total_sales'], ascending=[True, False]).groupby('genre').head(1)
             st.write("Best console per genre:")
             st.dataframe(best_console)
 
         # -----------------------------
-        # Question 6: Random Forest Sales Prediction Example
+        # Question 6
         # -----------------------------
         st.subheader("🧠 Q6: Predict Sales Category with Random Forest")
+        try:
+            required_cols = ["console","genre","publisher","developer","month","year","total_sales"]
+            if all(x in data_clean.columns for x in required_cols):
+                df_q6 = data_clean.copy()
 
-        if all(x in data_clean.columns for x in ["console","genre","publisher","developer","month","year","total_sales"]):
-            df_q6 = data_clean.copy()
-            # Drop columns that shouldn't be used as features (like title)
-            drop_cols = ["title", "release_date"]  # add more if needed
-            df_q6 = df_q6.drop(columns=[c for c in drop_cols if c in df_q6.columns])
-            categorical_cols = ["console", "genre", "publisher", "developer"]
-            data_encoded = pd.get_dummies(df_q6, columns=categorical_cols).astype(float)
-            bins = [0, 0.2, 0.4, 2, 10, np.inf]
-            labels = ['0.2', '0.2-0.4', '0.4-2', '2-10', "10+"]
-            data_encoded['sales_score_numeric'] = pd.cut(data_encoded['total_sales'], bins=bins, labels=False, right=False)
-            y = data_encoded['sales_score_numeric']
-            X = data_encoded.drop(['total_sales','sales_score_numeric'], axis=1)
+                drop_cols = ["title", "release_date"]
+                df_q6 = df_q6.drop(columns=[c for c in drop_cols if c in df_q6.columns])
 
-            X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.15, random_state=8)
-            classifier = RandomForestClassifier(n_estimators=100, max_depth=6, class_weight="balanced", random_state=8)
-            classifier.fit(X_train, y_train)
+                for col in ["publisher", "developer"]:
+                    topN = df_q6[col].value_counts().nlargest(20).index
+                    df_q6[col] = df_q6[col].where(df_q6[col].isin(topN), "Other")
 
-            st.write("Random Forest trained on sales categories.")
-            y_pred = classifier.predict(X_test)
-            st.write("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+                categorical_cols = ["console", "genre", "publisher", "developer"]
+                data_encoded = pd.get_dummies(df_q6, columns=categorical_cols)
 
-            st.write("Confusion Matrix:")
-            cm = metrics.confusion_matrix(y_test, y_pred)
-            fig, ax = plt.subplots()
-            ax.imshow(cm, cmap=plt.cm.Blues)
-            ax.set_title("Confusion Matrix")
-            plt.xlabel("Predicted")
-            plt.ylabel("Actual")
-            st.pyplot(fig)
+                bins = [0, 0.2, 0.4, 2, 10, np.inf]
+                data_encoded['sales_score_numeric'] = pd.cut(
+                    data_encoded['total_sales'], bins=bins, labels=False, right=False
+                )
+
+                y = data_encoded['sales_score_numeric']
+                X = data_encoded.drop(['total_sales','sales_score_numeric'], axis=1)
+
+                X_train, X_test, y_train, y_test = model_selection.train_test_split(
+                    X, y, test_size=0.15, random_state=8, stratify=y
+                )
+
+                classifier = RandomForestClassifier(
+                    n_estimators=100, max_depth=6, class_weight="balanced", random_state=8
+                )
+                classifier.fit(X_train, y_train)
+
+                st.success("✅ Random Forest trained on sales categories.")
+                y_pred = classifier.predict(X_test)
+                st.write("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+
+                cm = metrics.confusion_matrix(y_test, y_pred)
+                fig, ax = plt.subplots()
+                im = ax.imshow(cm, cmap=plt.cm.Blues)
+                ax.set_title("Confusion Matrix")
+                ax.set_xlabel("Predicted")
+                ax.set_ylabel("Actual")
+                fig.colorbar(im)
+                st.pyplot(fig)
+
+        except Exception as e:
+            st.error(f"❌ Error in Q6: {e}")
 
     except Exception as e:
         st.error(f"❌ Error processing the dataset: {e}")
-
 else:
-    st.info("👆 Upload a CSV or Excel dataset to get started")
+    st.info("Could not find data.")
