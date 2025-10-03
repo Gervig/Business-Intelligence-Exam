@@ -438,7 +438,7 @@ if data is not None:
                     fig.colorbar(im)
                     st.pyplot(fig)
                 except Exception as e:
-                    st.error(f"❌ Error plotting confusion matrix: {e}")
+                    st.error(f"Error plotting confusion matrix: {e}")
 
                 st.write ("""
                 ### Hypothesis for question 6:
