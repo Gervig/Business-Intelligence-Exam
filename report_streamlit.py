@@ -16,22 +16,11 @@ from sklearn.tree import plot_tree
 st.set_page_config(page_title="Business Intelligence Report", layout="wide")
 st.title("📊 Business Intelligence Exam Report")
 
-# -----------------------------
-# Upload Dataset
-# -----------------------------
-uploaded_file = st.file_uploader("Upload your CSV dataset", type=["csv", "xlsx"])
-if uploaded_file is not None:
+# load data
+data = pd.read_csv("https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/Data/vgchartz-2024.csv")
+
+if data is not None:
     try:
-        # Load dataset
-        if uploaded_file.name.endswith(".csv"):
-            data = pd.read_csv(uploaded_file)
-        else:
-            data = pd.read_excel(uploaded_file)
-
-        st.success("✅ Dataset loaded successfully!")
-        st.subheader("Preview of the data")
-        st.dataframe(data.head())
-
         # -----------------------------
         # General Cleaning
         # -----------------------------
