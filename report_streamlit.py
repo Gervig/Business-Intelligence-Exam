@@ -14,7 +14,7 @@ from sklearn.tree import plot_tree
 # Page Config
 # -----------------------------
 st.set_page_config(page_title="Business Intelligence Report", layout="wide")
-st.title("📊 Business Intelligence Exam Report")
+st.title("Business Intelligence Exam Report")
 
 # load data
 data = pd.read_csv("https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/Data/vgchartz-2024.csv")
@@ -24,7 +24,7 @@ if data is not None:
         # -----------------------------
         # General Cleaning
         # -----------------------------
-        st.subheader("🧹 General Cleaning")
+        st.subheader("General Cleaning")
         data_clean = data.copy()
         # Drop unneeded columns if they exist
         for col in ["last_update", "img"]:
@@ -55,7 +55,7 @@ if data is not None:
         # -----------------------------
         # Question 1
         # -----------------------------
-        st.subheader("🎮 Q1: Best Month to Release a Game")
+        st.subheader("Q1: Best Month to Release a Game")
 
         if all(x in data_clean.columns for x in ["month", "year", "total_sales"]):
             df_q1 = data_clean.copy()
@@ -73,10 +73,29 @@ if data is not None:
             fig.update_xaxes(range=[0.5, 12.5], tickmode='linear', dtick=1)
             st.plotly_chart(fig)
 
+            st.write("""
+            The Months and years shows when the game was released, not the date of the sale. Sales are measured accumulatively. But we assume that sales are highest around the release date.
+            We can see a trend in later years around the month 10 and 11, which we speculate sales leading up to Christmas(the holidays). We can also see a slight trend around month 3 (March), we speculate that a lot of our data comes from games sold for NA. This could possibly be explained by holidays in NA, for example Spring break. 
+            """)
+
+            st.write("""
+            We want to see how many games are released over the years for specific months, to compare with the previous animation for sales, but the sales are reported as acumelated over the years, but we figure that most of the sales come from the release period.
+            Based on the 2 visualizations, we can conclude, that the months that most game are released in, thats aproximately the same months with best sales. 
+            """)
+
+            st.write("""
+            ### Hypothesis for question 1: 
+            We assume that games sell better during certain periods of the year compared to others. Therefore, we expect to observe a trend where games released in those periods achieve higher sales.
+
+            ### Observartion:
+            We can see that there are trends to when games are released and high sales are recorded, march, june but mostly september, october and november. We assume that is due to most of our data comes from north america, and its properly due to black friday and holidays
+            """)
+            
+
         # -----------------------------
         # Question 2
         # -----------------------------
-        st.subheader("📊 Q2: Clustering Games by Release Period & Sales")
+        st.subheader("Q2: Clustering Games by Release Period & Sales")
         if all(x in data_clean.columns for x in ["year", "month", "total_sales"]):
             df_q2 = data_clean.copy()
             df_q2 = df_q2.dropna(subset=["year", "month"])
@@ -109,10 +128,19 @@ if data is not None:
             )
             st.plotly_chart(fig)
 
+            st.write("""
+            ### Hypothesis for question 2: 
+            We expect video games can be clustered into meaningful groups according to their age and sales success.
+
+            ### Observartion:
+            We can use this clustering model to help categorize different games based on their sales. We can as an example look at games in the cluster for high sales and study that type of game to see what they do differently compared to games that are placed in the lower sales cluster.
+            At the same time we can potetially use older and "high" selling games to see if there is a trend that still persist in newer high selling games            
+            """)
+
         # -----------------------------
         # Question 3
         # -----------------------------
-        st.subheader("🎮 Q3: Best Console per Genre")
+        st.subheader("Q3: Best Console per Genre")
         if all(x in data_clean.columns for x in ["genre", "console", "total_sales"]):
             df_q3 = data_clean.copy()
             all_consoles = df_q3['console'].unique()
@@ -135,10 +163,47 @@ if data is not None:
             st.write("Best console per genre:")
             st.dataframe(best_console)
 
+            st.write("""
+            We had expected to see more sales for PC, we speculate the dataset is incomplete and doesn't reflect the real world scenario in this case. We had previously cleaned the dataset and there were thousands of rows with no data for sales, which we removed.
+            """)
+
+            st.write ("""
+            ### Hypothesis for question 3:
+            We assume that certain game genres sell better on specific consoles. Therefore, we expect to see a significantly larger number of sales from a specific genre on those consoles.
+
+            ### Observartion:
+            We can conclude from our data that developing games for home consoles will give the best possible sales, it is however important to note that our dataset shows clear holes in the data, with high possibility of missing data for PC releases/sales wich gives a skewed view that favors console releases.
+            """)
+
+        # -----------------------------
+        # Question 4
+        # -----------------------------
+
+        st.write ("""
+        ### Hypothesis for question 4:
+        We assume that some game genres follow a popularity cycle, and we expect to identify patterns in when specific genres become popular.
+
+        ### Observartion:
+        We can see that aren't really any yearly trends for genres of games, we can generally see that there are some genres that are more popular than others.
+        We can see that some genres used to be popular, but no longer are, such as "racing". On the other hand there are some other genres still popular, such as shooter. (note that our data cuts off at 2018). 
+            """)
+
+        # -----------------------------
+        # Question 5
+        # -----------------------------
+
+        st.write ("""
+        ### Hypothesis for question 5:
+        We assume that some game genres sell better in specific regions.
+
+        ### Observartion:
+        We can see that the NA region has higher sells in all genres, JP and OTHER has almost none and PAL has a few. So we can conclude that all genres will most likely sell better in NA. And while Action, shooter and Sports are highest in every almost every region, it seems that JP is mostly into Role-Playing. 
+            """)
+
         # -----------------------------
         # Question 6
         # -----------------------------
-        st.subheader("🧠 Q6: Predict Sales Category with Random Forest")
+        st.subheader("Q6: Predict Sales Category with Random Forest")
         try:
             required_cols = ["console","genre","publisher","developer","month","year","total_sales"]
             if all(x in data_clean.columns for x in required_cols):
@@ -184,10 +249,19 @@ if data is not None:
                 fig.colorbar(im)
                 st.pyplot(fig)
 
+                st.write ("""
+                ### Hypothesis for question 6:
+                We assume that the combination of categorical features in the dataset (such as genre, console, publisher, and developer) contains enough information to predict a game’s total sales before launch. Therefore, we expect that a machine learning model, such as a Random Forest, will be able to generate reasonably accurate predictions of sales based solely on these features.
+
+                ### Observartion:
+                Even though our model has a high prediction percentage. Most of our prediction accuracy lies in the lower bins and quickly falls off as the bins increase. That could be explain by the lower number of high selling games compared to lower selling.
+ 
+                """)
+
         except Exception as e:
-            st.error(f"❌ Error in Q6: {e}")
+            st.error(f"Error in Q6: {e}")
 
     except Exception as e:
-        st.error(f"❌ Error processing the dataset: {e}")
+        st.error(f"Error processing the dataset: {e}")
 else:
     st.info("Could not find data.")
