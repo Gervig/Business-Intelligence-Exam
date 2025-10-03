@@ -233,9 +233,109 @@ if data is not None:
             st.dataframe(best_console)
 
         # -----------------------------
+        # Question 4
+        # -----------------------------
+        
+        # -----------------------------
+        # Total Game Sales per Year Animated by Genre
+        # -----------------------------
+        st.subheader("Q4: How can trends be predicted so that a game is released when its genre is popular?")
+
+        # Group and sum total sales
+        sales_summary_q4 = (
+            data_clean.groupby(['year', 'genre'], as_index=False)['total_sales'].sum()
+        )
+
+        # Get all years and genres
+        all_years = sales_summary_q4['year'].unique()
+        all_genres = sales_summary_q4['genre'].unique()
+
+        # Create full combination of year x genre
+        full_index = pd.MultiIndex.from_product([all_years, all_genres], names=['year', 'genre'])
+        sales_summary_q4 = sales_summary_q4.set_index(['year','genre']).reindex(full_index, fill_value=0).reset_index()
+
+        # Create animated bar chart
+        fig = px.bar(
+            sales_summary_q4,
+            x="year",
+            y="total_sales",
+            animation_frame="genre",
+            labels={
+                "total_sales": "Total Sales",
+                "year": "Release Year",
+                "genre": "Game Genre"
+            },
+            title="Total Game Sales per Year Animated by Genre",
+            color="genre"  # optional, can remove if you don't want color distinction
+        )
+
+        # Fix x-axis so all years are shown
+        fig.update_xaxes(categoryorder="array", categoryarray=sorted(all_years))
+
+        # Optionally fix y-axis so bars don't get cut off
+        fig.update_yaxes(range=[0, sales_summary_q4['total_sales'].max() * 1.05])
+
+        # Display in Streamlit
+        st.plotly_chart(fig)
+
+        # -----------------------------
+        # Question 5
+        # -----------------------------
+        st.subheader("Q5: Which game genres sell better in which regions, so that companies know where to market their games?")
+
+        # Columns representing regions
+        region_columns = ['na_sales', 'jp_sales', 'pal_sales', 'other_sales']
+
+        # Melt into long format
+        df_long = data_clean.melt(
+            id_vars=['title','console','genre','publisher','developer','critic_score','total_sales','release_date'],
+            value_vars=region_columns,
+            var_name='region',
+            value_name='sales'
+        )
+
+        # Make region names prettier
+        df_long['region'] = df_long['region'].str.replace('_sales', '', regex=False).str.upper()
+
+        # Aggregate sales by genre and region
+        sales_summary_region = df_long.groupby(['genre','region'], as_index=False)['sales'].sum()
+
+        all_genres = data_clean['genre'].unique()
+        all_regions = ['NA','JP','PAL','OTHER']
+
+        # Ensure all genre x region combinations exist
+        full_index = pd.MultiIndex.from_product([all_genres, all_regions], names=['genre','region'])
+        sales_summary_region = sales_summary_region.set_index(['genre','region']).reindex(full_index, fill_value=0).reset_index()
+
+        # Create animated bar chart
+        fig = px.bar(
+            sales_summary_region,
+            x="genre",
+            y="sales",
+            animation_frame="region",
+            labels={
+                "sales": "Total Sales",
+                "genre": "Game Genre",
+                "region": "Region"
+            },
+            title="Total Game Sales by Genre Animated by Region",
+            color="genre"
+        )
+
+        # Keep x-axis fixed
+        fig.update_xaxes(categoryorder="array", categoryarray=list(all_genres))
+
+        # Fix y-axis so bars are never cut off
+        fig.update_yaxes(range=[0, sales_summary_region['sales'].max() * 1.05])
+
+        # Display in Streamlit
+        st.plotly_chart(fig)
+
+        # -----------------------------
         # Question 6
         # -----------------------------
-        st.subheader("🧠 Q6: Predict Sales Category with Random Forest")
+        st.subheader("Q6: Predict Sales Category with Random Forest")
+
         try:
             required_cols = ["console","genre","publisher","developer","month","year","total_sales"]
             if all(x in data_clean.columns for x in required_cols):
@@ -272,14 +372,22 @@ if data is not None:
                 y_pred = classifier.predict(X_test)
                 st.write("Accuracy:", metrics.accuracy_score(y_test, y_pred))
 
-                cm = metrics.confusion_matrix(y_test, y_pred)
-                fig, ax = plt.subplots()
-                im = ax.imshow(cm, cmap=plt.cm.Blues)
-                ax.set_title("Confusion Matrix")
-                ax.set_xlabel("Predicted")
-                ax.set_ylabel("Actual")
-                fig.colorbar(im)
-                st.pyplot(fig)
+                # -----------------------------
+                # Confusion Matrix
+                # -----------------------------
+                st.subheader("Confusion Matrix")
+
+                try:
+                    cm = metrics.confusion_matrix(y_test, y_pred)
+                    fig, ax = plt.subplots()
+                    im = ax.imshow(cm, cmap=plt.cm.Blues)
+                    ax.set_title("Confusion Matrix")
+                    ax.set_xlabel("Predicted")
+                    ax.set_ylabel("Actual")
+                    fig.colorbar(im)
+                    st.pyplot(fig)
+                except Exception as e:
+                    st.error(f"❌ Error plotting confusion matrix: {e}")
 
         except Exception as e:
             st.error(f"❌ Error in Q6: {e}")
