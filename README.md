@@ -64,5 +64,5 @@ Our hypothesis for the above mentioned questions:
 
 
 ## References
-Dataset: https://mavenanalytics.io/data-playground/video-game-sales
+Dataset: https://mavenanalytics.io/data-playground/video-game-sales <br>
 Kaggle study: https://www.kaggle.com/datasets/asaniczka/video-game-sales-2024
