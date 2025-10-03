@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import seaborn as sb
 import matplotlib.pyplot as plt
 import plotly.express as px
 from sklearn import model_selection, metrics
@@ -275,3 +276,69 @@ if data is not None:
         st.error(f"Error processing the dataset: {e}")
 else:
     st.info("Could not find data.")
+
+# -----------------------------
+# Question 7
+# -----------------------------
+st.subheader("Q7: Critic Score vs Total Sales with Linear Regression")
+
+try:
+    if all(x in data_clean.columns for x in ["critic_score", "total_sales"]):
+        # Copy dataset with only critic_score and total_sales
+        data_general_clean_date_q7 = data_clean.copy()
+        data_general_clean_date_q7 = data_general_clean_date_q7.loc[:, ["critic_score", "total_sales"]]
+        data_general_clean_date_q7 = data_general_clean_date_q7.dropna()
+
+        st.subheader("Cleaned Data Sample")
+        st.dataframe(data_general_clean_date_q7.head())
+
+        # Independent (X) and dependent (y) variables
+        X = data_general_clean_date_q7['critic_score'].values.reshape(-1, 1)
+        y = data_general_clean_date_q7['total_sales'].values.reshape(-1, 1)
+
+        # Train/test split
+        from sklearn.model_selection import train_test_split
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Fit Linear Regression
+        from sklearn.linear_model import LinearRegression
+        model = LinearRegression()
+        model.fit(X_train, y_train)
+
+        a = model.coef_[0][0]   # slope
+        b = model.intercept_[0] # intercept
+        y_predicted = model.predict(X_test)
+
+        # Plot Linear Regression
+        st.subheader("Linear Regression Plot")
+        fig, ax = plt.subplots()
+        ax.set_title("Linear Regression")
+        ax.scatter(X, y, color='green', label="Actual Data")
+        ax.plot(X_train, a*X_train + b, color='blue', label="Regression Line")
+        ax.plot(X_test, y_predicted, color='orange', linestyle="dashed", label="Predictions")
+        ax.set_xlabel("Critic Score")
+        ax.set_ylabel("Total Sales")
+        ax.legend()
+        st.pyplot(fig)
+
+        # Show metrics
+        from sklearn.metrics import r2_score, mean_squared_error
+        r2 = r2_score(y_test, y_predicted)
+        mse = mean_squared_error(y_test, y_predicted)
+
+        st.write(f"**R² Score:** {r2:.3f}")
+        st.write(f"**Mean Squared Error:** {mse:.3f}")
+
+        st.write("""
+        ### Hypothesis for question 7:
+        We assume that games with a high critic score are also the games high total sales. Therefor, we expect to see a correlation between critic score and total sales.
+
+        ### Observartion:
+        On average our prediction are off by 0.65-1.2 millions of units sold. Overall our model is a poor fit, especially for the majority of low-selling games. Our dataset has a lot of games with very low sales, so our distribution of games is heavily skewed towards that. If we wanted to make a better model we would have to normalize the total sales.
+        """)
+
+    else:
+        st.info("Could not find critic_score or total_sales in dataset.")
+
+except Exception as e:
+    st.error(f"Error in Q7: {e}")
