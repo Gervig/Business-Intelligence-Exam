@@ -82,6 +82,14 @@ if data is not None:
             fig.update_xaxes(range=[0.5, 12.5], tickmode='linear', dtick=1)
 
             st.plotly_chart(fig)
+
+            st.write("""
+            ### Hypothesis for Question 1
+            We assume that games sell better during certain periods of the year compared to others. Therefore, we expect to observe a trend where games released in those periods achieve higher sales.
+
+            ### Observation
+            We can see trends in game release periods that correspond to higher sales, particularly in March, June, and mostly September, October, and November. This is likely because most of our data comes from North America, and these months coincide with Black Friday and holiday seasons.
+            """)
             
         # -----------------------------
         # Question 2
@@ -103,22 +111,23 @@ if data is not None:
             ax.set_title("Game Sales Over Time")
             plt.xticks(rotation=45)
             st.pyplot(fig)
-
+        
+            # K-Means clustering
             optimal_k = st.slider("Select number of clusters (K)", 2, 6, 4)
             kmeans = KMeans(n_clusters=optimal_k, n_init=10, random_state=42)
             df_q2['cluster'] = kmeans.fit_predict(X_scaled)
-
+        
             st.write(f"K-Means clusters assigned ({optimal_k} clusters).")
+            # Plot clusters
             fig = px.scatter(
                 df_q2,
-                x='date_numeric',
+                x='date',
                 y='total_sales',
                 color='cluster',
-                labels={"date_numeric": "Days since first release", "total_sales": "Total Sales"},
+                labels={"date": "Release Year", "total_sales": "Total Sales"},
                 title="K-Means Clustering"
             )
             st.plotly_chart(fig)
-
         # -----------------------------
         # Question 3
         # -----------------------------
