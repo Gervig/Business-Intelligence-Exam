@@ -336,6 +336,12 @@ if data is not None:
         # -----------------------------
         st.subheader("Q6: Predict Sales Category with Random Forest")
 
+        # Raw GitHub URL
+        image_url = "https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/Images/random_forest.png"
+        
+        # Display the image
+        st.image(image_url, caption="Random Forest", use_column_width=True)
+        
         try:
             required_cols = ["console","genre","publisher","developer","month","year","total_sales"]
             if all(x in data_clean.columns for x in required_cols):
