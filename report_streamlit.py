@@ -56,7 +56,7 @@ if data is not None:
         # -----------------------------
         # Question 1
         # -----------------------------
-        st.subheader("Q1: Best Month to Release a Game")
+        st.subheader("Q1: When should a company release a game to maximize sales at launch?")
 
         if all(x in data_clean.columns for x in ["month", "year", "total_sales"]):
             df_q1 = data_clean.copy()
@@ -83,6 +83,11 @@ if data is not None:
             fig.update_xaxes(range=[0.5, 12.5], tickmode='linear', dtick=1)
 
             st.plotly_chart(fig)
+
+            st.write("""
+            The Months and years shows when the game was released, not the date of the sale. Sales are measured accumulatively. But we assume that sales are highest around the release date.
+            We can see a trend in later years around the month 10 and 11, which we speculate sales leading up to Christmas(the holidays). We can also see a slight trend around month 3 (March), we speculate that a lot of our data comes from games sold for NA. This could possibly be explained by holidays in NA, for example Spring break. 
+            """)
         
             # Group by year and month, count games
             games_per_month = (
@@ -130,36 +135,22 @@ if data is not None:
             st.plotly_chart(fig)
 
             st.write("""
-            ### Hypothesis for Question 1
-            We assume that games sell better during certain periods of the year compared to others. Therefore, we expect to observe a trend where games released in those periods achieve higher sales.
-
-            ### Observation
-            We can see trends in game release periods that correspond to higher sales, particularly in March, June, and mostly September, October, and November. This is likely because most of our data comes from North America, and these months coincide with Black Friday and holiday seasons.
-            """)
-            
-            st.write("""
-            The Months and years shows when the game was released, not the date of the sale. Sales are measured accumulatively. But we assume that sales are highest around the release date.
-            We can see a trend in later years around the month 10 and 11, which we speculate sales leading up to Christmas(the holidays). We can also see a slight trend around month 3 (March), we speculate that a lot of our data comes from games sold for NA. This could possibly be explained by holidays in NA, for example Spring break. 
-            """)
-
-            st.write("""
             We want to see how many games are released over the years for specific months, to compare with the previous animation for sales, but the sales are reported as acumelated over the years, but we figure that most of the sales come from the release period.
             Based on the 2 visualizations, we can conclude, that the months that most game are released in, thats aproximately the same months with best sales. 
             """)
 
             st.write("""
-            ### Hypothesis for question 1: 
+            ### Hypothesis for Question 1
             We assume that games sell better during certain periods of the year compared to others. Therefore, we expect to observe a trend where games released in those periods achieve higher sales.
 
-            ### Observartion:
-            We can see that there are trends to when games are released and high sales are recorded, march, june but mostly september, october and november. We assume that is due to most of our data comes from north america, and its properly due to black friday and holidays
-            """)
-            
+            ### Observation
+            We can see trends in game release periods that correspond to higher sales, particularly in March, June, and mostly September, October, and November. This is likely because most of our data comes from North America, and these months coincide with Black Friday and holiday seasons.
+            """)        
 
         # -----------------------------
         # Question 2
         # -----------------------------
-        st.subheader("Q2: Clustering Games by Release Period & Sales")
+        st.subheader("Q2: Do video games form distinct clusters based on release period (old vs. new) and sales performance (high vs. low)?")
         if all(x in data_clean.columns for x in ["year", "month", "total_sales"]):
             df_q2 = data_clean.copy()
             df_q2 = df_q2.dropna(subset=["year", "month"])
@@ -180,7 +171,7 @@ if data is not None:
             # -----------------------------
             # Silhouette Score Method to Find Optimal K
             # -----------------------------
-            st.subheader("Silhouette Score Method for Optimal Number of Clusters")
+            st.subheader("Silhouette Score Method for Optimal Number of Clusters (it take time to calculate)")
 
             from sklearn.metrics import silhouette_score
 
@@ -238,7 +229,7 @@ if data is not None:
         # -----------------------------
         # Question 3
         # -----------------------------
-        st.subheader("Q3: Best Console per Genre")
+        st.subheader("Q3: Which consoles should a specific genre game be developed for optimzed sales?")
         if all(x in data_clean.columns for x in ["genre", "console", "total_sales"]):
             df_q3 = data_clean.copy()
             all_consoles = df_q3['console'].unique()
@@ -275,35 +266,6 @@ if data is not None:
 
         # -----------------------------
         # Question 4
-        # -----------------------------
-
-        st.write ("""
-        ### Hypothesis for question 4:
-        We assume that some game genres follow a popularity cycle, and we expect to identify patterns in when specific genres become popular.
-
-        ### Observartion:
-        We can see that aren't really any yearly trends for genres of games, we can generally see that there are some genres that are more popular than others.
-        We can see that some genres used to be popular, but no longer are, such as "racing". On the other hand there are some other genres still popular, such as shooter. (note that our data cuts off at 2018). 
-            """)
-
-        # -----------------------------
-        # Question 5
-        # -----------------------------
-
-        st.write ("""
-        ### Hypothesis for question 5:
-        We assume that some game genres sell better in specific regions.
-
-        ### Observartion:
-        We can see that the NA region has higher sells in all genres, JP and OTHER has almost none and PAL has a few. So we can conclude that all genres will most likely sell better in NA. And while Action, shooter and Sports are highest in every almost every region, it seems that JP is mostly into Role-Playing. 
-            """)
-
-        # -----------------------------
-        # Question 4
-        # -----------------------------
-        
-        # -----------------------------
-        # Total Game Sales per Year Animated by Genre
         # -----------------------------
         st.subheader("Q4: How can trends be predicted so that a game is released when its genre is popular?")
 
@@ -343,6 +305,15 @@ if data is not None:
 
         # Display in Streamlit
         st.plotly_chart(fig)
+
+        st.write ("""
+        ### Hypothesis for question 4:
+        We assume that some game genres follow a popularity cycle, and we expect to identify patterns in when specific genres become popular.
+
+        ### Observartion:
+        We can see that aren't really any yearly trends for genres of games, we can generally see that there are some genres that are more popular than others.
+        We can see that some genres used to be popular, but no longer are, such as "racing". On the other hand there are some other genres still popular, such as shooter. (note that our data cuts off at 2018). 
+            """)
 
         # -----------------------------
         # Question 5
@@ -397,10 +368,18 @@ if data is not None:
         # Display in Streamlit
         st.plotly_chart(fig)
 
+        st.write ("""
+        ### Hypothesis for question 5:
+        We assume that some game genres sell better in specific regions.
+
+        ### Observartion:
+        We can see that the NA region has higher sells in all genres, JP and OTHER has almost none and PAL has a few. So we can conclude that all genres will most likely sell better in NA. And while Action, shooter and Sports are highest in every almost every region, it seems that JP is mostly into Role-Playing. 
+            """)
+
         # -----------------------------
         # Question 6
         # -----------------------------
-        st.subheader("Q6: Predict Sales Category with Random Forest")
+        st.subheader("Q6:  Can we predict the sales of a game based on the different categorical values in the dataset before it launches?")
 
         # Raw GitHub URL
         image_url = "https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/Images/random_forest.png"
@@ -481,7 +460,7 @@ else:
 # -----------------------------
 # Question 7
 # -----------------------------
-st.subheader("Q7: Critic Score vs Total Sales with Linear Regression")
+st.subheader("Q7: Does the critic score of a video games have any influence on its sales?")
 
 try:
     if all(x in data_clean.columns for x in ["critic_score", "total_sales"]):
