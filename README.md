@@ -24,6 +24,8 @@ In this project we will investigate the following questions:
 
 6) Can we predict the sales of a game based on the different categorical values in the dataset before it launches.
 
+7) Does the critic score of a video games have any influence on its sales?
+
 
 
 ## Hypothesis
@@ -40,6 +42,8 @@ Our hypothesis for the above mentioned questions:
 5) We assume that some game genres sell better in specific regions.
 
 6) We assume that the combination of categorical features in the dataset (such as genre, console, publisher, and developer) contains enough information to predict a game’s total sales before launch. Therefore, we expect that a machine learning model, such as a Random Forest, will be able to generate reasonably accurate predictions of sales based solely on these features.
+
+7) We assume that games with a high critic score are also the games high total sales. Therefor, we expect to see a correlation between critic score and total sales.
 
 
 ## Annotation
