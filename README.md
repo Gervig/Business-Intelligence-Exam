@@ -2,7 +2,9 @@
 ### Business Intelligence Exam for EK 4th Semester (Dat1F24)
 
 ## Context
-More and more games are being developed and not all of them are successful. Companies have access to a lot of data, which includes, to name a few: Where games are being sold, release date, genres and how many were sold. The dataset that this project will be working with contains data stretching back from 1971 (CHECK THIS DATE!!!) to 2024. NÆVN AT DER ER MEGET MANGLEFULD DATA OG ANDRE TING VED DET
+More and more games are being developed and not all of them are successful. Companies have access to a lot of data, which includes, to name a few: Where games are being sold, release date, genres and how many were sold. The dataset that this project will be working with contains data stretching back from 1971 to 2024. 
+The data we work with seems to cut off at 2018, because we removed every game that didn't have sales, generally the dataset does not reflect the real world due to the missing data from manufacturers and other factors as the impossible task of getting every downloaded games sales and so on. 
+
 
 ## Purpose
 The purpose of this project is to help companies that either develop, market and or publish games to increase their sales by looking at previously released games.
