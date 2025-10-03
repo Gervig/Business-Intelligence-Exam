@@ -10,6 +10,9 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 # from yellowbrick.cluster import SilhouetteVisualizer
 from sklearn.tree import plot_tree
+import joblib
+import requests
+from io import BytesIO
 
 # -----------------------------
 # Page Config
@@ -419,9 +422,64 @@ if data is not None:
                 )
                 classifier.fit(X_train, y_train)
 
-                st.success("✅ Random Forest trained on sales categories.")
-                y_pred = classifier.predict(X_test)
-                st.write("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+                # ------------------------------
+                # 1. Load model and training columns
+                # ------------------------------
+                # Load RandomForest model from GitHub
+                model_url = "https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/random_forest_model.pkl"
+                response = requests.get(model_url)
+                classifier = joblib.load(BytesIO(response.content))
+                
+                # Load training columns (saved during notebook preprocessing)
+                # This ensures one-hot encoding matches exactly
+                cols_url = "https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/X_train_columns.pkl"
+                response_cols = requests.get(cols_url)
+                X_train_columns = joblib.load(BytesIO(response_cols.content))  # list of column names
+                
+                # Labels for prediction
+                labels = ['0.2', '0.2-0.4', '0.4-2', '2-10', "10+"]
+                
+                # ------------------------------
+                # 2. Streamlit user input
+                # ------------------------------
+                st.title("Predict Total Sales Group for a Game")
+                
+                console = st.text_input("Console", "PS5")
+                genre = st.text_input("Genre", "Action")
+                publisher = st.text_input("Publisher", "EA")
+                developer = st.text_input("Developer", "EA")
+                month = st.number_input("Month", min_value=1, max_value=12, value=1)
+                year = st.number_input("Year", min_value=1970, max_value=2030, value=2024)
+                
+                input_df = pd.DataFrame({
+                    "console": [console],
+                    "genre": [genre],
+                    "publisher": [publisher],
+                    "developer": [developer],
+                    "month": [month],
+                    "year": [year]
+                })
+                
+                # ------------------------------
+                # 3. Preprocessing: One-hot encode input
+                # ------------------------------
+                input_encoded = pd.get_dummies(input_df)
+                
+                # Add any missing columns from training data
+                for col in X_train_columns:
+                    if col not in input_encoded.columns:
+                        input_encoded[col] = 0
+                
+                # Ensure same column order
+                input_encoded = input_encoded[X_train_columns]
+                
+                # ------------------------------
+                # 4. Predict
+                # ------------------------------
+                if st.button("Predict Sales Group"):
+                    pred_numeric = classifier.predict(input_encoded)[0]
+                    pred_label = labels[pred_numeric]
+                    st.success(f"The predicted total sales group is: **{pred_label}**")
 
                 # -----------------------------
                 # Confusion Matrix
