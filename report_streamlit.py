@@ -322,19 +322,24 @@ try:
         st.pyplot(fig)
 
         # Show metrics
-        from sklearn.metrics import r2_score, mean_squared_error
-        r2 = r2_score(y_test, y_predicted)
-        mse = mean_squared_error(y_test, y_predicted)
+        from sklearn import metrics
+        
+        # Calculate MAE
+        mae = metrics.mean_absolute_error(y_test, y_predicted)
 
-        st.write(f"**R² Score:** {r2:.3f}")
-        st.write(f"**Mean Squared Error:** {mse:.3f}")
+        # Calculate RMSE
+        rmse = np.sqrt(metrics.mean_squared_error(y_test, y_predicted))
 
-        st.write("""
+        # Display metrics in Streamlit
+        st.write(f"**Mean Absolute Error (MAE):** {mae:.3f}")
+        st.write(f"**Root Mean Squared Error (RMSE):** {rmse:.3f}")
+
+        st.write(f"""
         ### Hypothesis for question 7:
         We assume that games with a high critic score are also the games high total sales. Therefor, we expect to see a correlation between critic score and total sales.
 
         ### Observartion:
-        On average our prediction are off by 0.65-1.2 millions of units sold. Overall our model is a poor fit, especially for the majority of low-selling games. Our dataset has a lot of games with very low sales, so our distribution of games is heavily skewed towards that. If we wanted to make a better model we would have to normalize the total sales.
+        On average our prediction are off by {mae:.2f}-{rmse:.2f} millions of units sold. Overall our model is a poor fit, especially for the majority of low-selling games. Our dataset has a lot of games with very low sales, so our distribution of games is heavily skewed towards that. If we wanted to make a better model we would have to normalize the total sales.
         """)
 
     else:
