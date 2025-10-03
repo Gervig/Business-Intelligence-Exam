@@ -89,10 +89,10 @@ if data is not None:
                 .size()
                 .reset_index(name="count")
             )
-            
+
             # Calculate max count for fixed y-axis
             max_count = games_per_month["count"].max()
-            
+
             # Ensure month is integer (in case it's not)
             if games_per_month["month"].dtype == 'object':
                 month_mapping = {
@@ -100,9 +100,9 @@ if data is not None:
                     "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12
                 }
                 games_per_month["month"] = games_per_month["month"].map(month_mapping)
-            
+
             games_per_month["month"] = games_per_month["month"].astype(int)
-            
+
             # Create animated bar chart
             fig = px.bar(
                 games_per_month,
@@ -116,15 +116,15 @@ if data is not None:
                 },
                 title="Number of Games Released per Month (Animated by Year)"
             )
-            
+
             # Fix both axes
             fig.update_yaxes(range=[0, max_count * 1.1])
             fig.update_xaxes(range=[0.5, 12.5], tickmode='linear', dtick=1, tick0=1)
-            
+
             # Optional: sort animation frames by year
             fig.frames = sorted(fig.frames, key=lambda f: int(f.name))
             fig.layout.sliders[0]["steps"] = sorted(fig.layout.sliders[0]["steps"], key=lambda s: int(s["label"]))
-            
+
             # Display in Streamlit
             st.plotly_chart(fig)
 
@@ -156,6 +156,38 @@ if data is not None:
             ax.set_title("Game Sales Over Time")
             plt.xticks(rotation=45)
             st.pyplot(fig)
+
+            # -----------------------------
+            # Silhouette Score Method to Find Optimal K
+            # -----------------------------
+            st.subheader("Silhouette Score Method for Optimal Number of Clusters")
+
+            from sklearn.metrics import silhouette_score
+
+            # Make sure you have the scaled clustering data (from Q2)
+            # X_scaled should already be defined in your Streamlit app for clustering
+            if 'X_scaled' in locals():
+                K_range = range(2, 10)
+                silhouette_scores = []
+
+                for k in K_range:
+                    model = KMeans(n_clusters=k, n_init=10, random_state=42)
+                    labels = model.fit_predict(X_scaled)
+                    score = silhouette_score(X_scaled, labels, metric='euclidean')
+                    silhouette_scores.append(score)
+
+                # Plot silhouette scores
+                fig, ax = plt.subplots(figsize=(8,5))
+                ax.plot(K_range, silhouette_scores, 'bx-')
+                ax.set_xlabel('Number of Clusters (k)')
+                ax.set_ylabel('Silhouette Score')
+                ax.set_title('Silhouette Score Method for Discovering Optimal K')
+                ax.grid(True, alpha=0.3)
+
+                st.pyplot(fig)
+            else:
+                st.info("Please run the clustering section first to generate X_scaled.")
+
         
             # K-Means clustering
             optimal_k = st.slider("Select number of clusters (K)", 2, 6, 4)
@@ -173,6 +205,7 @@ if data is not None:
                 title="K-Means Clustering"
             )
             st.plotly_chart(fig)
+
         # -----------------------------
         # Question 3
         # -----------------------------
