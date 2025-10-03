@@ -59,20 +59,30 @@ if data is not None:
 
         if all(x in data_clean.columns for x in ["month", "year", "total_sales"]):
             df_q1 = data_clean.copy()
+
+            # Ensure year is integer and sorted
+            df_q1 = df_q1.dropna(subset=["year"])
+            df_q1["year"] = df_q1["year"].astype(int)
+            df_q1 = df_q1.sort_values("year")
+
             max_sales = df_q1.groupby(['year', 'month'])['total_sales'].sum().max()
+
             fig = px.histogram(
                 df_q1,
                 x="month",
                 y="total_sales",
                 animation_frame="year",
                 histfunc="sum",
+                category_orders={"year": sorted(df_q1["year"].unique())},  # 👈 Force chronological order
                 labels={"total_sales": "Sales", "month": "Release Month", "year": "Release Year"},
                 title="Monthly Release Histogram Animated by Year and Total Sales"
             )
+
             fig.update_yaxes(range=[0, max_sales * 1.1])
             fig.update_xaxes(range=[0.5, 12.5], tickmode='linear', dtick=1)
-            st.plotly_chart(fig)
 
+            st.plotly_chart(fig)
+            
             st.write("""
             The Months and years shows when the game was released, not the date of the sale. Sales are measured accumulatively. But we assume that sales are highest around the release date.
             We can see a trend in later years around the month 10 and 11, which we speculate sales leading up to Christmas(the holidays). We can also see a slight trend around month 3 (March), we speculate that a lot of our data comes from games sold for NA. This could possibly be explained by holidays in NA, for example Spring break. 
