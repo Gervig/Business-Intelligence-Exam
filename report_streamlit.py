@@ -82,6 +82,51 @@ if data is not None:
             fig.update_xaxes(range=[0.5, 12.5], tickmode='linear', dtick=1)
 
             st.plotly_chart(fig)
+        
+            # Group by year and month, count games
+            games_per_month = (
+                data_clean.groupby(["year", "month"])
+                .size()
+                .reset_index(name="count")
+            )
+            
+            # Calculate max count for fixed y-axis
+            max_count = games_per_month["count"].max()
+            
+            # Ensure month is integer (in case it's not)
+            if games_per_month["month"].dtype == 'object':
+                month_mapping = {
+                    "Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6,
+                    "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12
+                }
+                games_per_month["month"] = games_per_month["month"].map(month_mapping)
+            
+            games_per_month["month"] = games_per_month["month"].astype(int)
+            
+            # Create animated bar chart
+            fig = px.bar(
+                games_per_month,
+                x="month",
+                y="count",
+                animation_frame="year",
+                labels={
+                    "count": "Number of Games",
+                    "month": "Release Month",
+                    "year": "Release Year"
+                },
+                title="Number of Games Released per Month (Animated by Year)"
+            )
+            
+            # Fix both axes
+            fig.update_yaxes(range=[0, max_count * 1.1])
+            fig.update_xaxes(range=[0.5, 12.5], tickmode='linear', dtick=1, tick0=1)
+            
+            # Optional: sort animation frames by year
+            fig.frames = sorted(fig.frames, key=lambda f: int(f.name))
+            fig.layout.sliders[0]["steps"] = sorted(fig.layout.sliders[0]["steps"], key=lambda s: int(s["label"]))
+            
+            # Display in Streamlit
+            st.plotly_chart(fig)
 
             st.write("""
             ### Hypothesis for Question 1
