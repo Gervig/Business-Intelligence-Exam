@@ -174,7 +174,7 @@ if data is not None:
             # -----------------------------
             # Silhouette Score Method to Find Optimal K
             # -----------------------------
-            st.subheader("Silhouette Score Method for Optimal Number of Clusters (it take time to calculate)")
+            st.subheader("Silhouette Score Method for Optimal Number of Clusters (it takes time to calculate)")
 
             from sklearn.metrics import silhouette_score
 
@@ -382,75 +382,71 @@ if data is not None:
         # -----------------------------
         # Question 6
         # -----------------------------
-        st.subheader("Q6:  Can we predict the sales of a game based on the different categorical values in the dataset before it launches?")
+        st.subheader("Q6: Can we predict the sales of a game based on categorical values before launch?")
 
-        # Raw GitHub URL
+        # Raw GitHub URL for image
         image_url = "https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/Images/random_forest.png"
-        
-        # Display the image
-        st.image(image_url, caption="Random Forest", use_column_width=True)
-        
+        st.image(image_url, caption="Random Forest", use_container_width=True)
+
         try:
-            required_cols = ["console","genre","publisher","developer","month","year","total_sales"]
+            required_cols = ["console", "genre", "publisher", "developer", "month", "year", "total_sales"]
             if all(x in data_clean.columns for x in required_cols):
                 df_q6 = data_clean.copy()
 
+                # Drop unused cols
                 drop_cols = ["title", "release_date"]
                 df_q6 = df_q6.drop(columns=[c for c in drop_cols if c in df_q6.columns])
 
+                # Limit publishers/devs to Top20 + "Other"
                 for col in ["publisher", "developer"]:
                     topN = df_q6[col].value_counts().nlargest(20).index
                     df_q6[col] = df_q6[col].where(df_q6[col].isin(topN), "Other")
 
+                # One-hot encode categorical features
                 categorical_cols = ["console", "genre", "publisher", "developer"]
                 data_encoded = pd.get_dummies(df_q6, columns=categorical_cols)
+                data_encoded = data_encoded.astype(float)
 
+                # Create classification labels
                 bins = [0, 0.2, 0.4, 2, 10, np.inf]
                 data_encoded['sales_score_numeric'] = pd.cut(
                     data_encoded['total_sales'], bins=bins, labels=False, right=False
                 )
 
                 y = data_encoded['sales_score_numeric']
-                X = data_encoded.drop(['total_sales','sales_score_numeric'], axis=1)
+                X = data_encoded.drop(['total_sales', 'sales_score_numeric'], axis=1)
 
+                # Train/test split
                 X_train, X_test, y_train, y_test = model_selection.train_test_split(
                     X, y, test_size=0.15, random_state=8, stratify=y
                 )
 
+                # Train Random Forest
                 classifier = RandomForestClassifier(
                     n_estimators=100, max_depth=6, class_weight="balanced", random_state=8
                 )
                 classifier.fit(X_train, y_train)
 
+                # Keep column names for input alignment
+                X_train_columns = X.columns.tolist()
+
+                # Report training accuracy
+                y_pred = classifier.predict(X_test)
+                st.success("Random Forest trained on sales categories.")
+                st.write("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+
                 # ------------------------------
-                # 1. Load model and training columns
-                # ------------------------------
-                # Load RandomForest model from GitHub
-                model_url = "https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/random_forest_model.pkl"
-                response = requests.get(model_url)
-                classifier = joblib.load(BytesIO(response.content))
-                
-                # Load training columns (saved during notebook preprocessing)
-                # This ensures one-hot encoding matches exactly
-                cols_url = "https://raw.githubusercontent.com/Gervig/Business-Intelligence-Exam/main/X_train_columns.pkl"
-                response_cols = requests.get(cols_url)
-                X_train_columns = joblib.load(BytesIO(response_cols.content))  # list of column names
-                
-                # Labels for prediction
-                labels = ['0.2', '0.2-0.4', '0.4-2', '2-10', "10+"]
-                
-                # ------------------------------
-                # 2. Streamlit user input
+                # Streamlit user input
                 # ------------------------------
                 st.title("Predict Total Sales Group for a Game")
-                
+
                 console = st.text_input("Console", "PS5")
                 genre = st.text_input("Genre", "Action")
                 publisher = st.text_input("Publisher", "EA")
                 developer = st.text_input("Developer", "EA")
                 month = st.number_input("Month", min_value=1, max_value=12, value=1)
                 year = st.number_input("Year", min_value=1970, max_value=2030, value=2024)
-                
+
                 input_df = pd.DataFrame({
                     "console": [console],
                     "genre": [genre],
@@ -459,33 +455,35 @@ if data is not None:
                     "month": [month],
                     "year": [year]
                 })
-                
+
                 # ------------------------------
-                # 3. Preprocessing: One-hot encode input
+                # Preprocess user input
                 # ------------------------------
                 input_encoded = pd.get_dummies(input_df)
-                
-                # Add any missing columns from training data
+
+                # Add any missing cols
                 for col in X_train_columns:
                     if col not in input_encoded.columns:
                         input_encoded[col] = 0
-                
+
                 # Ensure same column order
                 input_encoded = input_encoded[X_train_columns]
-                
-                # ------------------------------
-                # 4. Predict
-                # ------------------------------
+
+                # Labels for prediction
+                labels = ['0-0.2', '0.2-0.4', '0.4-2', '2-10', "10+"]
+
+                # Predict
                 if st.button("Predict Sales Group"):
                     pred_numeric = classifier.predict(input_encoded)[0]
                     pred_label = labels[pred_numeric]
                     st.success(f"The predicted total sales group is: **{pred_label}**")
 
+                    st.write("The prediction is in millions of units sold.")
+
                 # -----------------------------
                 # Confusion Matrix
                 # -----------------------------
                 st.subheader("Confusion Matrix")
-
                 try:
                     cm = metrics.confusion_matrix(y_test, y_pred)
                     fig, ax = plt.subplots()
@@ -498,17 +496,21 @@ if data is not None:
                 except Exception as e:
                     st.error(f"Error plotting confusion matrix: {e}")
 
-                st.write ("""
+                # Write observations
+                st.write("""
                 ### Hypothesis for question 6:
-                We assume that the combination of categorical features in the dataset (such as genre, console, publisher, and developer) contains enough information to predict a game’s total sales before launch. Therefore, we expect that a machine learning model, such as a Random Forest, will be able to generate reasonably accurate predictions of sales based solely on these features.
+                We assume that the combination of categorical features in the dataset (such as genre, console, publisher, and developer) contains enough information to predict a game’s total sales before launch.
 
-                ### Observartion:
-                Even though our model has a high prediction percentage. Most of our prediction accuracy lies in the lower bins and quickly falls off as the bins increase. That could be explain by the lower number of high selling games compared to lower selling.
- 
+                ### Observation:
+                Even though our model has a high prediction percentage, most of our prediction accuracy lies in the lower bins and quickly falls off as the bins increase. This could be explained by the lower number of high-selling games compared to lower-selling ones.
                 """)
+
+            else:
+                st.error("Required columns are missing from dataset.")
 
         except Exception as e:
             st.error(f"Error in Q6: {e}")
+
 
     except Exception as e:
         st.error(f"Error processing the dataset: {e}")
