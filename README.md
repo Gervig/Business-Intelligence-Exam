@@ -45,6 +45,23 @@ Our hypothesis for the above mentioned questions:
 
 7) We assume that games with a high critic score are also the games high total sales. Therefor, we expect to see a correlation between critic score and total sales.
 
+## Observartions
+
+1) We can see that there are trends to when games are released and high sales are recorded, March, June but mostly September, October and November. We assume that is due to most of our data comes from North America, and its properly due to black friday and holidays.
+
+2) We can use this clustering model to help categorize different games based on their sales. We can as an example look at games in the cluster for high sales, and study that type of game to see what they do differently compared to games that are placed in the lower sales cluster.
+At the same time we can potetially use older and "high" selling games to see if there is a trend that still persist in newer high selling games
+
+3) We can conclude from our data that developing games for home consoles will give the best possible sales, it is however important to note that our dataset shows clear holes in the data, with high possibility of missing data for PC releases/sales wich gives a skewed view that favors console releases.
+
+4) We can see that aren't really any yearly trends for genres of games, we can generally see that there are some genres that are more popular than others.
+We can see that some genres used to be popular, but no longer are, such as "racing". On the other hand there are some other genres still popular, such as shooter. (note that our data cuts off at 2018). 
+
+5) We can see that the NA region has higher sells in all genres, JP and OTHER has almost none and PAL has a few. So we can conclude that all genres will most likely sell better in NA. And while Action, shooter and Sports are highest in every almost every region, it seems that JP is mostly into Role-Playing.
+
+6) Even though our model has a high prediction percentage. Most of our prediction accuracy lies in the lower bins and quickly falls off as the sales-bins increase. That could be explained by the lower number of high selling games compared to lower selling.
+
+7) On average our predictions are off by 0.65-1.2 millions of units sold. Overall our model is a poor fit, especially for the majority of low-selling games. Our dataset has a lot of games with very low sales, so our distribution of games is heavily skewed towards that. There are is a trend with higher critic score and higher sales, but there is not a correlation. 
 
 ## Annotation
 - This project addresses when it is most optimal to release a game in a specific genre and region.
@@ -66,8 +83,11 @@ Our hypothesis for the above mentioned questions:
 - pal_sales = the PAL sales in millions
 - other_sales = Other sales in millions
 - release_date = the release date
--last_update = the last date that the data in the row was updated
+- last_update = the last date that the data in the row was updated
 
+
+## Deployed
+https://gervig-business-intelligence-exam-report-streamlit-indzmj.streamlit.app/
 
 ## References
 Dataset: https://mavenanalytics.io/data-playground/video-game-sales <br>
