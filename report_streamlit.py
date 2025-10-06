@@ -461,13 +461,11 @@ if data is not None:
                 # ------------------------------
                 input_encoded = pd.get_dummies(input_df)
 
-                # Add any missing cols
-                for col in X_train_columns:
-                    if col not in input_encoded.columns:
-                        input_encoded[col] = 0
-
-                # Ensure same column order
-                input_encoded = input_encoded[X_train_columns]
+                # Align input with training columns in one step (avoids fragmentation)
+                input_encoded = input_encoded.reindex(columns=X_train_columns, fill_value=0)
+                
+                # Ensure numeric dtype matches training (RandomForest expects numeric)
+                input_encoded = input_encoded.astype(float)
 
                 # Labels for prediction
                 labels = ['0-0.2', '0.2-0.4', '0.4-2', '2-10', "10+"]
